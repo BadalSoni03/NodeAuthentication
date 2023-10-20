@@ -12,6 +12,7 @@ const validateUserRegister = [
 	.withMessage('Name must be between 3 to 20 characters'),
 	
 	check('email')
+	.trim()
 	.normalizeEmail({gmail_remove_dots: false})
 	.isEmail()
 	.withMessage('Enter a valid email id'),
