@@ -31,7 +31,7 @@ userSchema.pre('save' , async function (next) {
 		this.password = hashedPassword;
 	}
 	catch (error) {
-		console.log('Error in pre('save') operation : ' + error.message);
+		console.log('Error in save operation : ' + error.message);
 	}
 });
 
