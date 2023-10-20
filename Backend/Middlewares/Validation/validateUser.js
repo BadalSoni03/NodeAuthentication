@@ -13,7 +13,7 @@ const validateUserRegister = [
 	
 	check('email')
 	.trim()
-	.normalizeEmail({gmail_remove_dots: false})
+	.normalizeEmail({gmail_remove_dots : false})
 	.isEmail()
 	.withMessage('Enter a valid email id'),
 	
