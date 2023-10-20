@@ -45,7 +45,7 @@ const loginController = async (req , res) => {
 	if (!isMatch) {
 		return res.status(400).send({
 			success : false,
-			message : 'passwords are not matching'
+			message : 'invalid email / password'
 		})
 	}
 	const token = JWT.sign({userId : user._id} , process.env.JWT_SECRET_KEY , {expiresIn : '1d'});
