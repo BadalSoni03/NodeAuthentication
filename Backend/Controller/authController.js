@@ -50,7 +50,7 @@ const loginController = async (req , res) => {
 	}
 	const token = JWT.sign({userId : user._id} , process.env.JWT_SECRET_KEY , {expiresIn : '1d'});
 	
-	let oldTokens = user.token || [];
+	let oldTokens = user.tokens || [];
 	if (oldTokens.length) {
 		oldTokens = oldTokens.filter(tkn => {
 			const timeDiff = (Date.now() - parseInt(tkn.signedAt)) / 1000;
