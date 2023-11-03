@@ -3,7 +3,7 @@ User authentication and authorization in NodeJs such as register , login and log
 
 This repository is basically the reference template for user authentication and authorization in NodeJs and MongoDB using JWT and express-validator library.
 
-User sign-up , sign-in and sign-out functionalities are implemented.
+User sign-up , sign-in , sign-out , forgot and reset password functionalities are implemented.
 
 /auth/register end-point
 
