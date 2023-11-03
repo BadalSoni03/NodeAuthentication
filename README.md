@@ -25,16 +25,16 @@ The complete timeline of the user is shown below starting from registering to lo
 
 
 
-## Log in user with wrong password
+## Logging in user with wrong password
  
 ![Screenshot (26)](https://github.com/BadalSoni03/NodeAuthentication/assets/111721917/110b0b62-3e0c-406d-b20a-2300ce7fc3ff)
 
-## Log in user with right password
+## Logging in user with right password
 
 ![Screenshot (27)](https://github.com/BadalSoni03/NodeAuthentication/assets/111721917/7f187923-8dc5-436d-8981-7aa336dd2186)
 
 
-## Requesting the forgot-password url
+## Requesting the forgot-password end-point
 
 ![Screenshot (28)](https://github.com/BadalSoni03/NodeAuthentication/assets/111721917/c95cae2a-6836-4160-a9c2-19b594375887)
 
@@ -51,6 +51,6 @@ The complete timeline of the user is shown below starting from registering to lo
 ![Screenshot (31)](https://github.com/BadalSoni03/NodeAuthentication/assets/111721917/9365fcae-0218-4611-843f-d743c0bb28c4)
 
 
-## Logout
+## Logging out the user
 
 ![Screenshot (24)](https://github.com/BadalSoni03/NodeAuthentication/assets/111721917/837b5cfa-a4d1-4d29-8f59-a1d0622e0128)
