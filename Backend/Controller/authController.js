@@ -1,81 +1,94 @@
 const JWT = require('jsonwebtoken');
-const User = require('../Models/userModel');
+const User = require('../Models/User');
+const bcrypt = require('bcrypt');
 
 const registerController = async (req , res) => {
-	const {fullname , email , password} = req.body;
-	const isNewUser = await User.newUserOrNot(email);
-	if (!isNewUser) {
-		return res.status(400).send({
-			success : false,
-			message : 'User already registered'
+	try {
+		const {fullname , email , password} = req.body;
+		const userFound = await User.findOne({email : req.body.email});
+		if (userFound) {
+			return res.status(400).send({
+				success : false,
+				message : 'User already registered'
+			});
+		}
+
+		const hashedPassword = await bcrypt.hash(password , 10);
+		const newUser = await User({
+			fullname,
+			email,
+			password : hashedPassword,
 		});
+		await newUser.save();
+		if (newUser) {
+			return res.status(200).send({
+				success : true,
+				message : 'User registered successfully',
+				newUser
+			})
+		}
 	}
-	const newUser = await User.create({
-		fullname,
-		email,
-		password,
-	});
-	
-	if (newUser) {
-		return res.status(200).send({
-			success : true,
-			message : 'User registered successfully',
-			newUser
-		})
-	}
-	else {
+	catch (error) {
 		return res.status(500).send({
 			success : false,
-			message : 'Error in register API',
+			message : 'Error in registerController Public API',
+			error : error.message
 		})
 	}
 };
 
-const loginController = async (req , res) => {
-	const {email , password} = req.body;
-	const user = await User.findOne({email}); 
-	if (!user) { 
-		return res.status(400).send({
+const loginController = async (req , res) => { 
+	try {
+		const {email , password} = req.body;
+		const user = await User.findOne({email}); 
+		if (!user) { 
+			return res.status(400).send({
+				success : false,
+				message : 'User not registered'
+			});
+		}
+		const isMatch = await bcrypt.compare(password , user.password); 
+		if (!isMatch) {
+			return res.status(400).send({
+				success : false,
+				message : 'passwords are not matching'
+			})
+		}
+		const token = JWT.sign({userId : user._id} , process.env.JWT_SECRET_KEY , {expiresIn : '1d'});
+		
+		let oldTokens = user.tokens || [];
+		if (oldTokens.length) {
+			oldTokens = oldTokens.filter(tkn => {
+				const timeDiff = (Date.now() - parseInt(tkn.signedAt)) / 1000;
+				if (timeDiff < 86400) {
+					return tkn;
+				}
+			});
+		}
+
+		await User.findByIdAndUpdate(user._id , {
+			tokens : [...oldTokens , {
+				token, 
+				signedAt : Date.now().toString()
+			}]
+		});
+		const info = {
+			fullname : user.fullname,
+			email : user.email
+		};
+		return res.status(200).send({
+			success : true,
+			message : 'User logged in successfully',
+			user : info,
+			token
+		});
+	} catch (error) {
+		return res.status(500).send({
 			success : false,
-			message : 'User not registered'
+			message : 'Error in loginController Public API',
+			error : error.message
 		});
 	}
-
-	const isMatch = user.comparePassword(password);
-	if (!isMatch) {
-		return res.status(400).send({
-			success : false,
-			message : 'invalid email / password'
-		})
-	}
-	const token = JWT.sign({userId : user._id} , process.env.JWT_SECRET_KEY , {expiresIn : '1d'});
-	
-	let oldTokens = user.tokens || [];
-	if (oldTokens.length) {
-		oldTokens = oldTokens.filter(tkn => {
-			const timeDiff = (Date.now() - parseInt(tkn.signedAt)) / 1000;
-			if (timeDiff < 86400) {
-				return tkn;
-			}
-		});
-	}
-
-	await User.findByIdAndUpdate(user._id , {
-		tokens : [...oldTokens , {
-			token, 
-			signedAt : Date.now().toString()
-		}]
-	});
-	const info = {
-		fullname : user.fullname,
-		email : user.email
-	};
-	return res.status(200).send({
-		success : true,
-		message : 'User logged in successfully',
-		user : info,
-		token
-	});
 };
 
 const logoutController = async (req , res) => { 
