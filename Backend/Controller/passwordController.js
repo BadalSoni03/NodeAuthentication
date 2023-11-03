@@ -101,7 +101,7 @@ const resetPasswordController = async function (req , res) {
 	} catch (error) {
 		return res.status(500).send({
 			success : false,
-			message : 'Error in resetPasswordController Public API',
+			message : 'Error in resetPasswordController Private API',
 			error : error.message
 		});
 	}
