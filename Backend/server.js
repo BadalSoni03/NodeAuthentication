@@ -1,13 +1,17 @@
 const dotenv = require('dotenv');
 const express = require('express');
 const connectToDB = require('./Config/database');
-const authRoute = require('./Routes/authRoute');
+const authRouter = require('./Routes/authRouter');
+const passwordRouter = require('./Routes/passwordRouter');
 dotenv.config();
 connectToDB();
 
 const app = express();
 app.use(express.json());
-app.use('/auth' , authRoute);
+
+// routes
+app.use('/auth' , authRouter);
+app.use('/manage-password' , passwordRouter);
 
 const port = process.env.PORT;
 app.listen(port , () => {
